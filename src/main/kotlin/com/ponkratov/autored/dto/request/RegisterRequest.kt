@@ -1,13 +1,14 @@
-package com.ponkratov.autored.model.request
+package com.ponkratov.autored.dto.request
 
 import java.util.*
 
 class RegisterRequest(
-    private var email: String = "",
-    private var password: String = "",
-    private var phone: String = "",
-    private var birthdate: Date = Date(),
-    private var passportNumber: String = "",
-    private var driverLicenseNumber: String = ""
+    var fio: String = "",
+    var email: String = "",
+    var rawPassword: String = "",
+    var phone: String = "",
+    var birthdate: Date = Date(),
+    var passportNumber: String = "",
+    var driverLicenseNumber: String = ""
     //сюда фотку паспорта и прав еще
 )

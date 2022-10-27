@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Service
-class AuthTokenService: OncePerRequestFilter() {
+class AuthTokenFilter: OncePerRequestFilter() {
 
     @Autowired
     private val jwtUtils: JwtUtils? = null

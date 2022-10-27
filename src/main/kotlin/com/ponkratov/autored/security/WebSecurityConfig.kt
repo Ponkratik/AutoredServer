@@ -1,17 +1,63 @@
-package com.ponkratov.autored.config
+package com.ponkratov.autored.security
 
+import com.ponkratov.autored.security.jwt.AuthEntryPointJwt
+import com.ponkratov.autored.security.jwt.AuthTokenFilter
+import com.ponkratov.autored.security.service.UserDetailsServiceImpl
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.servlet.config.annotation.CorsRegistry
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
-@EnableWebMvc
-class WebConfig: WebMvcConfigurer {
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
-    override fun addCorsMappings(registry: CorsRegistry) {
-        registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000", "http://localhost:8080", "http://localhost:4200")
-            .allowCredentials(true)
+    @Autowired
+    private val unauthorizedHandler: AuthEntryPointJwt? = null
+
+    @Autowired
+    private var userDetailsService: UserDetailsServiceImpl? = null
+
+    @Throws(Exception::class)
+    override fun configure(http: HttpSecurity) {
+        http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+            .antMatchers("/api/auth/**").permitAll().antMatchers("/api/test/**").permitAll().anyRequest()
+            .authenticated()
+        http.addFilterBefore(
+            authenticationJwtTokenFilter(),
+            UsernamePasswordAuthenticationFilter::class.java
+        )
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun authenticationJwtTokenFilter(): AuthTokenFilter {
+        return AuthTokenFilter()
+    }
+
+    @Throws(Exception::class)
+    public override fun configure(authenticationManagerBuilder: AuthenticationManagerBuilder) {
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
+    }
+
+    @Bean
+    @Throws(Exception::class)
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
     }
 }

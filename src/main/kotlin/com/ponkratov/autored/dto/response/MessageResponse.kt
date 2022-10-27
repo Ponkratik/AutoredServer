@@ -1,4 +1,5 @@
 package com.ponkratov.autored.dto.response
 
-class MessageResponse {
-}
+class MessageResponse(
+    private val message: String
+)
