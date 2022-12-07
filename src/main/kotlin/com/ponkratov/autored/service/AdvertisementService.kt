@@ -43,7 +43,7 @@ class AdvertisementService {
 
     fun verifyAdvertisement(id: Long): String {
         val result = advertisementRepository.verify(id)
-        return if (result) {
+        return if (result > 0) {
             "Advertisement verified successfully"
         } else {
             "Wrong advertisement ID(${id})"
