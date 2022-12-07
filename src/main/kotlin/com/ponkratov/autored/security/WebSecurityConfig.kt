@@ -34,6 +34,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
             .antMatchers("/api/attachment/**").permitAll()
+            .antMatchers("/api/**").permitAll()
             .antMatchers("/api/test/**").permitAll()
             .anyRequest().authenticated()
         http.addFilterBefore(
