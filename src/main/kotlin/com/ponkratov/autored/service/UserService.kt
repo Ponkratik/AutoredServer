@@ -1,11 +1,16 @@
 package com.ponkratov.autored.service
 
+import com.ponkratov.autored.model.AttachmentTypeEnum
+import com.ponkratov.autored.model.RoleEnum
+import com.ponkratov.autored.model.SupertypeEntity
 import com.ponkratov.autored.model.User
 import com.ponkratov.autored.repository.RoleRepository
+import com.ponkratov.autored.repository.SupertypeEntityRepository
 import com.ponkratov.autored.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class UserService {
@@ -19,9 +24,15 @@ class UserService {
     @Autowired
     private val roleRepository: RoleRepository? = null
 
-    fun registerUser(user: User): String {
+    @Autowired
+    private val supertypeEntityRepository: SupertypeEntityRepository? = null
 
-        if (requireNotNull(userRepository).existsByEmail(user.email) || userRepository.existsByPhone(user.phone)) {
+    @Autowired
+    private val attachmentService: AttachmentService? = null
+
+    fun registerUser(user: User, passportPhoto: MultipartFile, driverLicensePhoto: MultipartFile): String {
+
+        if (requireNotNull(userRepository).existsByEmail(user.email)) {
             return "User with email ${user.email} exists"
         }
 
@@ -30,14 +41,15 @@ class UserService {
         }
 
         user.password = requireNotNull(passwordEncoder).encode(user.password)
-        user.roles = requireNotNull(requireNotNull(roleRepository).findAllByName(ROLE_USER).toMutableSet())
+        user.roles = requireNotNull(roleRepository).findAllByName(RoleEnum.ROLE_USER.name).toMutableSet()
 
-        val result = userRepository.save(user)
-        //вызвать сохранение фотографий
+        val idObject = supertypeEntityRepository?.save(SupertypeEntity())
+        user.id = requireNotNull(idObject?.id)
+        val registerResult = userRepository.save(user)
+
+        val passportUploadResult = attachmentService?.uploadFile(passportPhoto, user.id, AttachmentTypeEnum.TYPE_AVATAR)
+        val driverLicenseUploadResult = attachmentService?.uploadFile(driverLicensePhoto, user.id, AttachmentTypeEnum.TYPE_DRIVER_LICENSE)
+
         return "User was registered successfully"
-    }
-
-    companion object {
-        private const val ROLE_USER = "ROLE_USER"
     }
 }

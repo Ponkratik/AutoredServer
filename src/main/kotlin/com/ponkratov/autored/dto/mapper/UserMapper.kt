@@ -1,4 +1,4 @@
-package com.ponkratov.autored.dto
+package com.ponkratov.autored.dto.mapper
 
 import com.ponkratov.autored.dto.request.RegisterRequest
 import com.ponkratov.autored.model.User

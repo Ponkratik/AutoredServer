@@ -1,23 +1,53 @@
-package com.ponkratov.autored.model
+package com.ponkratov.autored.model;
 
 import java.util.*
 import javax.persistence.*
-import kotlin.collections.HashSet
 
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "autored")
 class User(
-    @Id @GeneratedValue @Column(name = "id") var id: Long = 0,
-    @Column(name = "fio") var fio: String = "",
-    @Column(name = "email") var email: String = "",
-    @Column(name = "password") var password: String = "",
-    @Column(name = "blocked") var blocked: Boolean = false,
-    @Column(name = "verified") var verified: Boolean = false,
-    @ManyToMany(fetch = FetchType.EAGER) var roles: MutableSet<Role> = hashSetOf(),
-    @Column(name = "phone") var phone: String = "",
-    @Column(name = "birthdate") var birthdate: Date = Date(),
-    @Column(name = "profile_description") var profileDescription: String = "",
-    @Column(name = "passport_number") var passportNumber: String = "",
-    @Column(name = "driver_license_number") var driverLicenseNumber: String = ""
-)
+    @Id @Column(name = "id") var id: Long = 0,
+    @Basic @Column(name = "fio") var fio: String = "",
+    @Basic @Column(name = "email") var email: String = "",
+    @Basic @Column(name = "password") var password: String = "",
+    @Basic @Column(name = "blocked") var isBlocked: Boolean = false,
+    @Basic @Column(name = "verified") var isVerified: Boolean = false,
+    @Basic @Column(name = "phone") var phone: String = "",
+    @Basic @Column(name = "birthdate") var birthdate: Date = Date(),
+    @Basic @Column(name = "profile_description") var profileDescription: String = "",
+    @Basic @Column(name = "passport_number") var passportNumber: String = "",
+    @Basic @Column(name = "driver_license_number") var driverLicenseNumber: String = "",
+) {
+    @OneToMany(mappedBy = "userByUserId")
+    var advertisementsById: MutableList<Advertisement>? = null
+
+    @OneToMany(mappedBy = "userByUserFrom")
+    var reviewCarsById: MutableList<ReviewCar>? = null
+
+    @OneToMany(mappedBy = "userByUserFrom")
+    var reviewUsersByIdPosted: MutableList<ReviewUser>? = null
+
+    @OneToMany(mappedBy = "userByUserTo")
+    var reviewUsersByIdRecieved: MutableList<ReviewUser>? = null
+
+    @OneToMany(mappedBy = "userByLessorId")
+    var ridesById: MutableList<Ride>? = null
+
+    @OneToMany(mappedBy = "userByUserId")
+    var supportRequestsById: MutableList<SupportRequest>? = null
+
+    @OneToOne
+    @JoinColumn(
+        name = "id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false
+    )
+    var supertypeEntityById: SupertypeEntity? = null
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @JoinTable(
+        name = "user_role",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    var roles: MutableSet<Role> = mutableSetOf()
+}

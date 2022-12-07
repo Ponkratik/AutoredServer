@@ -9,8 +9,8 @@ fun User.toDetails(): UserDetailsImpl = UserDetailsImpl(
     fio = fio,
     email = email,
     password = password,
-    blocked = blocked,
-    verified = verified,
+    blocked = isBlocked,
+    verified = isVerified,
     roles = roles.map {
         SimpleGrantedAuthority(it.name)
     },

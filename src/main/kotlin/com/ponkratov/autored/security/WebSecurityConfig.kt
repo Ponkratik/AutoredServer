@@ -32,8 +32,10 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-            .antMatchers("/api/auth/**").permitAll().antMatchers("/api/test/**").permitAll().anyRequest()
-            .authenticated()
+            .antMatchers("/api/auth/**").permitAll()
+            .antMatchers("/api/attachment/**").permitAll()
+            .antMatchers("/api/test/**").permitAll()
+            .anyRequest().authenticated()
         http.addFilterBefore(
             authenticationJwtTokenFilter(),
             UsernamePasswordAuthenticationFilter::class.java

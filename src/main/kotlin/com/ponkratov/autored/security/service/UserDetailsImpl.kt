@@ -1,10 +1,8 @@
 package com.ponkratov.autored.security.service
 
-import com.ponkratov.autored.model.Role
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
-import javax.persistence.*
 
 class UserDetailsImpl(
     var id: Long = 0,

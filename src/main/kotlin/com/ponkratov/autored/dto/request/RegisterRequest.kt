@@ -9,6 +9,6 @@ class RegisterRequest(
     var phone: String = "",
     var birthdate: Date = Date(),
     var passportNumber: String = "",
-    var driverLicenseNumber: String = ""
-    //сюда фотку паспорта и прав еще
+    var driverLicenseNumber: String = "",
+    var profileDescription: String = ""
 )
