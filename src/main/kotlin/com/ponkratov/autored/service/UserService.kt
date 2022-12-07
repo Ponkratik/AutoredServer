@@ -19,7 +19,8 @@ class UserService {
     private val passwordEncoder: PasswordEncoder? = null
 
     @Autowired
-    private val userRepository: UserRepository? = null
+    private var _userRepository: UserRepository? = null
+    private val userRepository get() = requireNotNull(_userRepository)
 
     @Autowired
     private val roleRepository: RoleRepository? = null
@@ -32,7 +33,7 @@ class UserService {
 
     fun registerUser(user: User, passportPhoto: MultipartFile, driverLicensePhoto: MultipartFile): String {
 
-        if (requireNotNull(userRepository).existsByEmail(user.email)) {
+        if (userRepository.existsByEmail(user.email)) {
             return "User with email ${user.email} exists"
         }
 
@@ -51,5 +52,14 @@ class UserService {
         val driverLicenseUploadResult = attachmentService?.uploadFile(driverLicensePhoto, user.id, AttachmentTypeEnum.TYPE_DRIVER_LICENSE)
 
         return "User was registered successfully"
+    }
+
+    fun verifyUser(id: Long): String {
+        val result = userRepository.verify(id)
+        return if (result > 0) {
+            "User verified successfully"
+        } else {
+            "Wrong user ID(${id})"
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.ponkratov.autored.model;
+package com.ponkratov.autored.model
 
 import java.util.*
 import javax.persistence.*
@@ -11,8 +11,8 @@ class User(
     @Basic @Column(name = "fio") var fio: String = "",
     @Basic @Column(name = "email") var email: String = "",
     @Basic @Column(name = "password") var password: String = "",
-    @Basic @Column(name = "blocked") var isBlocked: Boolean = false,
-    @Basic @Column(name = "verified") var isVerified: Boolean = false,
+    @Basic @Column(name = "blocked") var blocked: Boolean = false,
+    @Basic @Column(name = "verified") var verified: Boolean = false,
     @Basic @Column(name = "phone") var phone: String = "",
     @Basic @Column(name = "birthdate") var birthdate: Date = Date(),
     @Basic @Column(name = "profile_description") var profileDescription: String = "",

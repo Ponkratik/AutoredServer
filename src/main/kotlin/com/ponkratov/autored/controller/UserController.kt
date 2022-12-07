@@ -15,12 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestPart
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.util.stream.Collectors
 
@@ -30,7 +25,8 @@ import java.util.stream.Collectors
 class UserController {
 
     @Autowired
-    private var userService: UserService? = null
+    private var _userService: UserService? = null
+    private val userService get() = requireNotNull(_userService)
 
     @Autowired
     var authenticationManager: AuthenticationManager? = null
@@ -38,14 +34,13 @@ class UserController {
     @Autowired
     var jwtUtils: JwtUtils? = null
 
-    //@PostMapping("/register")
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun registerUser(
         @RequestPart("registerRequest") @Validated registerRequest: RegisterRequest,
         @RequestPart("passportPhoto") passportPhoto: MultipartFile,
         @RequestPart("driverLicensePhoto") driverLicensePhoto: MultipartFile
     ): ResponseEntity<*> {
-        val result = requireNotNull(userService).registerUser(registerRequest.toUser(), passportPhoto, driverLicensePhoto)
+        val result = userService.registerUser(registerRequest.toUser(), passportPhoto, driverLicensePhoto)
 
         return ResponseEntity.ok(result)
     }
@@ -73,5 +68,11 @@ class UserController {
                 roles
             )
         )
+    }
+
+    @PostMapping("/verify/{id}")
+    fun verifyAdvertisement(@PathVariable("id") id: Long): ResponseEntity<*> {
+        val result = userService.verifyUser(id)
+        return ResponseEntity.ok(result)
     }
 }
