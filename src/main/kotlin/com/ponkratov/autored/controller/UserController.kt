@@ -37,10 +37,11 @@ class UserController {
     @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun registerUser(
         @RequestPart("registerRequest") @Validated registerRequest: RegisterRequest,
+        @RequestPart("avatar") avatarPhoto: MultipartFile,
         @RequestPart("passportPhoto") passportPhoto: MultipartFile,
         @RequestPart("driverLicensePhoto") driverLicensePhoto: MultipartFile
     ): ResponseEntity<*> {
-        val result = userService.registerUser(registerRequest.toUser(), passportPhoto, driverLicensePhoto)
+        val result = userService.registerUser(registerRequest.toUser(), avatarPhoto, passportPhoto, driverLicensePhoto)
 
         return ResponseEntity.ok(result)
     }
@@ -71,7 +72,7 @@ class UserController {
     }
 
     @PostMapping("/verify/{id}")
-    fun verifyAdvertisement(@PathVariable("id") id: Long): ResponseEntity<*> {
+    fun verifyUser(@PathVariable("id") id: Long): ResponseEntity<*> {
         val result = userService.verifyUser(id)
         return ResponseEntity.ok(result)
     }
