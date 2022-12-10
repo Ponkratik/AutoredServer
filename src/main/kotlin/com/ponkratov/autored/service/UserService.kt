@@ -29,9 +29,10 @@ class UserService {
     private val supertypeEntityRepository: SupertypeEntityRepository? = null
 
     @Autowired
-    private val attachmentService: AttachmentService? = null
+    private val _attachmentService: AttachmentService? = null
+    private val attachmentService get() = requireNotNull(_attachmentService)
 
-    fun registerUser(user: User, passportPhoto: MultipartFile, driverLicensePhoto: MultipartFile): String {
+    fun registerUser(user: User, avatarPhoto: MultipartFile, passportPhoto: MultipartFile, driverLicensePhoto: MultipartFile): String {
 
         if (userRepository.existsByEmail(user.email)) {
             return "User with email ${user.email} exists"
@@ -48,8 +49,9 @@ class UserService {
         user.id = requireNotNull(idObject?.id)
         val registerResult = userRepository.save(user)
 
-        val passportUploadResult = attachmentService?.uploadFile(passportPhoto, user.id, AttachmentTypeEnum.TYPE_AVATAR)
-        val driverLicenseUploadResult = attachmentService?.uploadFile(driverLicensePhoto, user.id, AttachmentTypeEnum.TYPE_DRIVER_LICENSE)
+        val avatarUploadResult = attachmentService.uploadFile(avatarPhoto, user.id, AttachmentTypeEnum.TYPE_AVATAR)
+        val passportUploadResult = attachmentService.uploadFile(passportPhoto, user.id, AttachmentTypeEnum.TYPE_PASSPORT)
+        val driverLicenseUploadResult = attachmentService.uploadFile(driverLicensePhoto, user.id, AttachmentTypeEnum.TYPE_DRIVER_LICENSE)
 
         return "User was registered successfully"
     }
