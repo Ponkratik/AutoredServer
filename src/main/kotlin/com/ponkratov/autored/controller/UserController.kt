@@ -4,6 +4,7 @@ import com.ponkratov.autored.dto.request.LoginRequest
 import com.ponkratov.autored.dto.request.RegisterRequest
 import com.ponkratov.autored.dto.response.JwtResponse
 import com.ponkratov.autored.dto.mapper.toUser
+import com.ponkratov.autored.dto.response.MessageResponse
 import com.ponkratov.autored.security.jwt.JwtUtils
 import com.ponkratov.autored.security.service.UserDetailsImpl
 import com.ponkratov.autored.service.UserService
@@ -34,7 +35,7 @@ class UserController {
     @Autowired
     var jwtUtils: JwtUtils? = null
 
-    @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE], produces=[MediaType.APPLICATION_JSON_VALUE])
     fun registerUser(
         @RequestPart("registerRequest") @Validated registerRequest: RegisterRequest,
         @RequestPart("avatar") avatarPhoto: MultipartFile,
@@ -43,11 +44,11 @@ class UserController {
     ): ResponseEntity<*> {
         val result = userService.registerUser(registerRequest.toUser(), avatarPhoto, passportPhoto, driverLicensePhoto)
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody @Validated loginRequest: LoginRequest): ResponseEntity<*> {
+    fun login(@RequestPart("loginRequest") @Validated loginRequest: LoginRequest): ResponseEntity<*> {
         val authentication = requireNotNull(authenticationManager).authenticate(
             UsernamePasswordAuthenticationToken(loginRequest.email, loginRequest.password)
         )
@@ -71,9 +72,9 @@ class UserController {
         )
     }
 
-    @PostMapping("/verify/{id}")
+    @PostMapping("/verify/{id}", produces=[MediaType.APPLICATION_JSON_VALUE])
     fun verifyUser(@PathVariable("id") id: Long): ResponseEntity<*> {
         val result = userService.verifyUser(id)
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 }

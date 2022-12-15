@@ -8,4 +8,6 @@ interface CarRepository: JpaRepository<Car, Long> {
     fun existsCarByVin(vin: String): Boolean
 
     fun existsCarByLicensePlate(licensePlate: String): Boolean
+
+    fun findCarById(id: Long): Car
 }

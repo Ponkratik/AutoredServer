@@ -1,5 +1,6 @@
 package com.ponkratov.autored.controller
 
+import com.ponkratov.autored.dto.response.MessageResponse
 import com.ponkratov.autored.model.SupportRequest
 import com.ponkratov.autored.service.SupportRequestService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,11 +20,11 @@ class SupportRequestController {
     @PostMapping("/add")
     fun addAdvertisement(
         @RequestPart("supportrequest") supportRequest: SupportRequest,
-        @RequestPart("files") files: List<MultipartFile>
+        @RequestPart("files") files: List<MultipartFile>?
     ): ResponseEntity<*> {
         val result = supportRequestService.createRequest(supportRequest, files)
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @GetMapping("/get/all")

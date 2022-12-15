@@ -1,6 +1,7 @@
 package com.ponkratov.autored.repository
 
 
+import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.UrlResource
 import org.springframework.stereotype.Service
@@ -16,7 +17,7 @@ class AttachmentRepositoryLocal {
 
     fun saveFile(file: MultipartFile, name: String) {
         val bytes = file.bytes
-        val path = Paths.get("${basePath}\\${name}.${file.getExtension()}")
+        val path = Paths.get("${basePath}\\${name}")
         Files.write(path, bytes)
     }
 

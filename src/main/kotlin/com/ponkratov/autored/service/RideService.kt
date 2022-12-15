@@ -1,5 +1,6 @@
 package com.ponkratov.autored.service
 
+import com.ponkratov.autored.dto.response.RideResponse
 import com.ponkratov.autored.model.AttachmentTypeEnum
 import com.ponkratov.autored.model.Ride
 import com.ponkratov.autored.repository.RideRepository
@@ -19,6 +20,13 @@ class RideService {
     private var _supertypeEntityService: SupertypeEntityService? = null
     private val supertypeEntityService get() = requireNotNull(_supertypeEntityService)
 
+    @Autowired
+    private var _advertisementService: AdvertisementService? = null
+    private val advertisementService get() = requireNotNull(_advertisementService)
+
+    @Autowired
+    private var _userService: UserService? = null
+    private val userService get() = requireNotNull(_userService)
 
     @Autowired
     private var _attachmentService: AttachmentService? = null
@@ -89,5 +97,27 @@ class RideService {
 
     fun getRideDetails(rideId: Long): Ride {
         return rideRepository.getRideById(rideId)
+    }
+
+    fun getRideResponsesByAdvertisementId(advId: Long): List<RideResponse> {
+        val list = getRidesByAdvertisementId(advId)
+        return list.map {
+            RideResponse(
+                ride = it,
+                user = userService.getUserById(it.lessorId),
+                advertisementResponse = advertisementService.getAdvertisementResponse(it.advertisementId)
+            )
+        }
+    }
+
+    fun getRideResponsesByLessorId(lessorId: Long): List<RideResponse> {
+        val list = getRidesByUserId(lessorId)
+        return list.map {
+            RideResponse(
+                ride = it,
+                user = userService.getUserById(requireNotNull(it.advertisementByAdvertisementId?.userId)),
+                advertisementResponse = advertisementService.getAdvertisementResponse(it.advertisementId)
+            )
+        }
     }
 }

@@ -52,4 +52,11 @@ class AttachmentService {
     fun getAttachmentsBySupertype(supertypeId: Long): List<Attachment> {
         return requireNotNull(attachmentRepository).getAttachmentsBySupertypeEntityBySupertypeEntityId_Id(supertypeId)
     }
+
+    fun getAttachmentsBySupertypeAndType(supertypeId: Long, type: AttachmentTypeEnum): List<Attachment> {
+        return requireNotNull(attachmentRepository).getAttachmentsBySupertypeEntityBySupertypeEntityId_IdAndAttachmentTypeByAttachmentTypeId_Id(
+            supertypeId,
+            type.id
+        )
+    }
 }

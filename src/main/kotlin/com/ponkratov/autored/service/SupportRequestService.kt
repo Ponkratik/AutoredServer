@@ -22,12 +22,12 @@ class SupportRequestService {
     private var _attachmentService: AttachmentService? = null
     private val attachmentService get() = requireNotNull(_attachmentService)
 
-    fun createRequest(supportRequest: SupportRequest, files: List<MultipartFile>): String {
+    fun createRequest(supportRequest: SupportRequest, files: List<MultipartFile>?): String {
         val generatedId = supertypeEntityService.getId()
         supportRequest.id = generatedId
         val requestResult = supportRequestRepository.save(supportRequest)
 
-        files.forEach {
+        files?.forEach {
             attachmentService.uploadFile(it, requestResult.id, AttachmentTypeEnum.TYPE_SUPPORT_REQUEST)
         }
 

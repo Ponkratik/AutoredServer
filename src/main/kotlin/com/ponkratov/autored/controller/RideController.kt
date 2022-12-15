@@ -1,5 +1,7 @@
 package com.ponkratov.autored.controller
 
+import com.ponkratov.autored.dto.response.MessageResponse
+import com.ponkratov.autored.dto.response.RideResponse
 import com.ponkratov.autored.model.AttachmentTypeEnum
 import com.ponkratov.autored.model.Ride
 import com.ponkratov.autored.service.RideService
@@ -28,7 +30,7 @@ class RideController {
             lessorId,
             Date()
         )
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @PostMapping("/book/end")
@@ -101,4 +103,17 @@ class RideController {
         return ResponseEntity.ok(result)
     }
 
+    @GetMapping("/get/all/full/advertisement/{id}")
+    fun getRideResponsesByAdvertisementId(@PathVariable("id") advertisementId: Long): ResponseEntity<List<RideResponse>> {
+        val result = rideService.getRideResponsesByAdvertisementId(advertisementId)
+
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping("/get/all/full/lessor/{id}")
+    fun getRideResponsesByLessorId(@PathVariable("id") lessorId: Long): ResponseEntity<List<RideResponse>> {
+        val result = rideService.getRideResponsesByLessorId(lessorId)
+
+        return ResponseEntity.ok(result)
+    }
 }

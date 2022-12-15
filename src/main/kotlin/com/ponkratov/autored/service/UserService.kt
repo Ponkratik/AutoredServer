@@ -64,4 +64,8 @@ class UserService {
             "Wrong user ID(${id})"
         }
     }
+
+    fun getUserById(id: Long): User {
+        return userRepository.getUserById(id)
+    }
 }

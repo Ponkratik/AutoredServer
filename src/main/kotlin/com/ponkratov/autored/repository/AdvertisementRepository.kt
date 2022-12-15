@@ -14,4 +14,6 @@ interface AdvertisementRepository : JpaRepository<Advertisement, Long>{
     fun verify(id: Long): Int
 
     fun getAdvertisementById(id: Long): Advertisement
+
+    fun getAdvertisementsByUserId(userId: Long): List<Advertisement>
 }

@@ -9,10 +9,15 @@ import org.springframework.stereotype.Service
 class CarFeatureListService {
 
     @Autowired
-    private var carFeatureListRepository: CarFeatureListRepository? = null
+    private var _carFeatureListRepository: CarFeatureListRepository? = null
+    private val carFeatureListRepository get() = requireNotNull(_carFeatureListRepository)
 
     fun addCarFeatureList(carFeatureList: CarFeatureList): Boolean {
-        val result = carFeatureListRepository?.save(carFeatureList)
-        return result != null
+        val result = carFeatureListRepository.save(carFeatureList)
+        return true
+    }
+
+    fun getCarFeatureList(id: Long): CarFeatureList {
+        return carFeatureListRepository.findCarFeatureListByCarId(id)
     }
 }

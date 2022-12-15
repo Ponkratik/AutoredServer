@@ -18,4 +18,6 @@ interface UserRepository : JpaRepository<User, Long> {
     @Query("update User set verified = true where id = :id")
     @Transactional
     fun verify(id: Long): Int
+
+    fun getUserById(id: Long): User
 }

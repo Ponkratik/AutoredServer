@@ -1,5 +1,6 @@
 package com.ponkratov.autored.service
 
+import com.ponkratov.autored.dto.response.AdvertisementResponse
 import com.ponkratov.autored.model.Advertisement
 import com.ponkratov.autored.model.Car
 import com.ponkratov.autored.model.CarFeatureList
@@ -56,5 +57,45 @@ class AdvertisementService {
 
     fun getAdvertisements(): List<Advertisement> {
         return advertisementRepository.findAll()
+    }
+
+    fun getAdvertisementsByUser(userId: Long): List<Advertisement> {
+        return advertisementRepository.getAdvertisementsByUserId(userId)
+    }
+
+    fun getAdvertisementResponse(id: Long): AdvertisementResponse {
+        val adv = getAdvertisement(id)
+        return AdvertisementResponse(
+            adv,
+            carService.getCar(adv.carId),
+            carService.getCarFeaturesList(adv.carId),
+            carService.getCarPhotosList(adv.carId)
+        )
+    }
+
+    fun getAdvertisementsResponseByUser(userId: Long): List<AdvertisementResponse> {
+        val result = getAdvertisementsByUser(userId)
+
+        return result.map {
+            AdvertisementResponse(
+                it,
+                carService.getCar(it.carId),
+                carService.getCarFeaturesList(it.carId),
+                carService.getCarPhotosList(it.carId)
+            )
+        }
+    }
+
+    fun getAdvertisementsResponse(): List<AdvertisementResponse> {
+        val result = getAdvertisements()
+
+        return result.map {
+            AdvertisementResponse(
+                it,
+                carService.getCar(it.carId),
+                carService.getCarFeaturesList(it.carId),
+                carService.getCarPhotosList(it.carId)
+            )
+        }
     }
 }

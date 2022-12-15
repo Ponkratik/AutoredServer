@@ -11,9 +11,8 @@ interface AttachmentRepository : JpaRepository<Attachment, Long> {
 
     fun getAttachmentsBySupertypeEntityBySupertypeEntityId_Id(supertypeEntityBySupertypeEntityId_id: Long): List<Attachment>
 
-    fun getAttachmentsBySupertypeEntityBySupertypeEntityId_IdAndAttachmentTypeByAttachmentTypeId(
-        supertypeEntityBySupertypeEntityId_id: Long,
-        attachmentTypeByAttachmentTypeId: AttachmentType
+    fun getAttachmentsBySupertypeEntityBySupertypeEntityId_IdAndAttachmentTypeByAttachmentTypeId_Id(
+        supertypeEntityBySupertypeEntityId_id: Long, attachmentTypeByAttachmentTypeId_id: Long
     ): List<Attachment>
 
     fun getAttachmentById(id: Long): Attachment
