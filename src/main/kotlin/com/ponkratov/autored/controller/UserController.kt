@@ -5,6 +5,8 @@ import com.ponkratov.autored.dto.request.RegisterRequest
 import com.ponkratov.autored.dto.response.JwtResponse
 import com.ponkratov.autored.dto.mapper.toUser
 import com.ponkratov.autored.dto.response.MessageResponse
+import com.ponkratov.autored.dto.response.UserResponse
+import com.ponkratov.autored.model.Advertisement
 import com.ponkratov.autored.security.jwt.JwtUtils
 import com.ponkratov.autored.security.service.UserDetailsImpl
 import com.ponkratov.autored.service.UserService
@@ -35,7 +37,11 @@ class UserController {
     @Autowired
     var jwtUtils: JwtUtils? = null
 
-    @PostMapping("/register", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE], produces=[MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping(
+        "/register",
+        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun registerUser(
         @RequestPart("registerRequest") @Validated registerRequest: RegisterRequest,
         @RequestPart("avatar") avatarPhoto: MultipartFile,
@@ -72,9 +78,21 @@ class UserController {
         )
     }
 
-    @PostMapping("/verify/{id}", produces=[MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping("/verify/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun verifyUser(@PathVariable("id") id: Long): ResponseEntity<*> {
         val result = userService.verifyUser(id)
         return ResponseEntity.ok(MessageResponse(result))
+    }
+
+    @GetMapping("/get/full/all")
+    fun getUserResponses(): ResponseEntity<List<UserResponse>> {
+        val result = userService.getUserResponses()
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping("/get/full/{id}")
+    fun getUserResponse(@PathVariable id: Long): ResponseEntity<UserResponse> {
+        val result = userService.getUserResponse(id)
+        return ResponseEntity.ok(result)
     }
 }

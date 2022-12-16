@@ -48,9 +48,9 @@ class RideService {
     fun endRide(id: Long, dateEnd: Date): String {
         val result = rideRepository.setDateEndById(id, dateEnd)
         return if (result > 0) {
-            "Book executed successfully"
+            "Ride ended successfully"
         } else {
-            "Error: this car can't be booked now!"
+            "Error: this ride can't be ended now!"
         }
     }
 
@@ -118,6 +118,15 @@ class RideService {
                 user = userService.getUserById(requireNotNull(it.advertisementByAdvertisementId?.userId)),
                 advertisementResponse = advertisementService.getAdvertisementResponse(it.advertisementId)
             )
+        }
+    }
+
+    fun startRide(rideId: Long, dateStart: Date): String {
+        val result = rideRepository.setDateStartById(rideId, dateStart)
+        return if (result > 0) {
+            "Ride started successfully"
+        } else {
+            "Error: this ride can't be started now!"
         }
     }
 }

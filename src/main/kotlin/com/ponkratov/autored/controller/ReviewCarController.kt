@@ -1,5 +1,7 @@
 package com.ponkratov.autored.controller
 
+import com.ponkratov.autored.dto.response.MessageResponse
+import com.ponkratov.autored.dto.response.ReviewCarResponse
 import com.ponkratov.autored.model.ReviewCar
 import com.ponkratov.autored.service.ReviewCarService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,15 +21,16 @@ class ReviewCarController {
     fun addReview(@RequestPart("review") reviewCar: ReviewCar): ResponseEntity<*> {
         val result = reviewCarService.addReview(reviewCar)
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @GetMapping("/get/all")
-    fun getAllReviews(): ResponseEntity<List<ReviewCar>> {
+    fun getAllReviewCarResponses(): ResponseEntity<List<ReviewCar>> {
         val result = reviewCarService.getAllReviews()
 
         return ResponseEntity.ok(result)
     }
+
 
     @GetMapping("/get/all/{id}")
     fun getAllReviewsByCar(@PathVariable("id") carId: Long): ResponseEntity<List<ReviewCar>> {
@@ -54,6 +57,6 @@ class ReviewCarController {
     fun deleteReviewById(@PathVariable id: Long): ResponseEntity<*> {
         val result = reviewCarService.deleteReviewById(id)
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 }

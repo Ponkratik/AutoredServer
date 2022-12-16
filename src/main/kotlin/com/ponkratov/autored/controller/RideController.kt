@@ -20,7 +20,7 @@ class RideController {
     private var _rideService: RideService? = null
     private val rideService get() = requireNotNull(_rideService)
 
-    @PostMapping("/book/start")
+    @PostMapping("/book/book")
     fun bookRide(
         @RequestPart("advertisementId") advertisementId: Long,
         @RequestPart("lessorId") lessorId: Long
@@ -28,14 +28,25 @@ class RideController {
         val result = rideService.startBooking(
             advertisementId,
             lessorId,
+            Date(0)
+        )
+        return ResponseEntity.ok(MessageResponse(result))
+    }
+
+    @PostMapping("/book/start/{id}")
+    fun startRide(
+        @PathVariable("id") rideId: Long
+    ): ResponseEntity<*> {
+        val result = rideService.startRide(
+            rideId,
             Date()
         )
         return ResponseEntity.ok(MessageResponse(result))
     }
 
-    @PostMapping("/book/end")
+    @PostMapping("/book/end/{id}")
     fun endRide(
-        @RequestPart("rideId") rideId: Long
+        @PathVariable("id") rideId: Long
     ): ResponseEntity<*> {
         val result = rideService.endRide(
             rideId,
@@ -68,16 +79,16 @@ class RideController {
         return ResponseEntity.ok(result)
     }
 
-    @PostMapping("/sign/lessor")
-    fun signActByLessor(@RequestPart("advertisementId") advertisementId: Long): ResponseEntity<*> {
-        val result = rideService.signByLessor(advertisementId, Date())
+    @PostMapping("/sign/lessor/{id}")
+    fun signActByLessor(@PathVariable("id") rideId: Long): ResponseEntity<*> {
+        val result = rideService.signByLessor(rideId, Date())
 
         return ResponseEntity.ok(result)
     }
 
-    @PostMapping("/sign/lessee")
-    fun signActByLessee(@RequestPart("advertisementId") advertisementId: Long): ResponseEntity<*> {
-        val result = rideService.signByLessee(advertisementId, Date())
+    @PostMapping("/sign/lessee/{id}")
+    fun signActByLessee(@PathVariable("id") rideId: Long): ResponseEntity<*> {
+        val result = rideService.signByLessee(rideId, Date())
 
         return ResponseEntity.ok(result)
     }

@@ -10,7 +10,7 @@ class Ride(
     @Id @Column(name = "id") var id: Long = 0,
     @Basic @Column(name = "advertisement_id") var advertisementId: Long = 0,
     @Basic @Column(name = "lessor_id") var lessorId: Long = 0,
-    @Basic @Column(name = "date_start") var dateStart: Date = Date(),
+    @Basic @Column(name = "date_start") var dateStart: Date = Date(0),
     @Basic @Column(name = "date_end") var dateEnd: Date = Date(0),
     @Basic @Column(name = "date_signed_lessor") var dateSignedLessor: Date = Date(0),
     @Basic @Column(name = "date_signed_lessee") var dateSignedLessee: Date = Date(0),

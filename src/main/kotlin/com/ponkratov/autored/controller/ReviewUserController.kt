@@ -1,5 +1,6 @@
 package com.ponkratov.autored.controller
 
+import com.ponkratov.autored.dto.response.MessageResponse
 import com.ponkratov.autored.model.ReviewUser
 import com.ponkratov.autored.repository.ReviewUserRepository
 import com.ponkratov.autored.service.ReviewUserService
@@ -20,7 +21,7 @@ class ReviewUserController {
     fun addReview(@RequestPart("review") reviewUser: ReviewUser): ResponseEntity<*> {
         val result = reviewUserService.addReview(reviewUser)
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @GetMapping("/get/all")
@@ -55,6 +56,6 @@ class ReviewUserController {
     fun deleteReviewById(@PathVariable id: Long): ResponseEntity<*> {
         val result = reviewUserService.deleteReviewById(id)
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 }

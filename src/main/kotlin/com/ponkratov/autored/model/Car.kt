@@ -26,5 +26,5 @@ class Car(
         nullable = false, insertable = false, updatable = false
     ) var supertypeEntityById: SupertypeEntity? = null,
     @OneToOne(mappedBy = "carByCarId") @JsonIgnore var carFeatureListById: CarFeatureList? = null,
-    @OneToMany(mappedBy = "carByCarTo") var reviewCarsById: MutableList<ReviewCar>? = null
+    @OneToMany(mappedBy = "carByCarTo") @JsonIgnore var reviewCarsById: MutableList<ReviewCar>? = null
 )

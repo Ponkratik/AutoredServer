@@ -1,5 +1,6 @@
 package com.ponkratov.autored.service
 
+import com.ponkratov.autored.dto.response.UserResponse
 import com.ponkratov.autored.model.AttachmentTypeEnum
 import com.ponkratov.autored.model.RoleEnum
 import com.ponkratov.autored.model.SupertypeEntity
@@ -67,5 +68,26 @@ class UserService {
 
     fun getUserById(id: Long): User {
         return userRepository.getUserById(id)
+    }
+
+    fun getUsers(): List<User> {
+        return userRepository.findAll()
+    }
+
+    fun getUserResponses(): List<UserResponse> {
+        return getUsers().map {
+            getUserResponse(it.id)
+        }
+    }
+
+    fun getUserResponse(id: Long): UserResponse {
+        val user = getUserById(id)
+
+        return UserResponse(
+            user,
+            attachmentService.getAttachmentsBySupertypeAndType(user.id, AttachmentTypeEnum.TYPE_AVATAR).first().fileName,
+            attachmentService.getAttachmentsBySupertypeAndType(user.id, AttachmentTypeEnum.TYPE_PASSPORT).first().fileName,
+            attachmentService.getAttachmentsBySupertypeAndType(user.id, AttachmentTypeEnum.TYPE_DRIVER_LICENSE).first().fileName
+        )
     }
 }

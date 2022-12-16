@@ -1,5 +1,6 @@
 package com.ponkratov.autored.repository
 
+import com.ponkratov.autored.dto.MapObjectStatistic
 import com.ponkratov.autored.model.Advertisement
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -16,4 +17,10 @@ interface AdvertisementRepository : JpaRepository<Advertisement, Long>{
     fun getAdvertisementById(id: Long): Advertisement
 
     fun getAdvertisementsByUserId(userId: Long): List<Advertisement>
+
+    @Query("select location from Advertisement group by location")
+    fun getLocationsStatisticLocations(): List<String>
+
+    @Query("select count(id) from Advertisement group by location")
+    fun getLocationsStatisticCount(): List<Long>
 }
