@@ -22,6 +22,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     implementation("mysql:mysql-connector-java:8.0.31")
     implementation("io.jsonwebtoken:jjwt:0.9.1")

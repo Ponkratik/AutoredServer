@@ -18,7 +18,7 @@ class SupportRequestController {
     private val supportRequestService get() = requireNotNull(_supportRequestService)
 
     @PostMapping("/add")
-    fun addAdvertisement(
+    fun addRequest(
         @RequestPart("supportrequest") supportRequest: SupportRequest,
         @RequestPart("files") files: List<MultipartFile>?
     ): ResponseEntity<*> {
@@ -42,7 +42,7 @@ class SupportRequestController {
     }
 
     @GetMapping("/get/{id}")
-    fun getAllRequestId(@PathVariable("id") id: Long): ResponseEntity<SupportRequest> {
+    fun getByRequestId(@PathVariable("id") id: Long): ResponseEntity<SupportRequest> {
         val result = supportRequestService.getRequestDetails(id)
 
         return ResponseEntity.ok(result)

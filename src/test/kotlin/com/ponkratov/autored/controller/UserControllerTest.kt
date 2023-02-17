@@ -1,91 +1,80 @@
 package com.ponkratov.autored.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.ponkratov.autored.AutoredApplication
 import com.ponkratov.autored.dto.request.RegisterRequest
-import com.ponkratov.autored.model.User
+import com.ponkratov.autored.dto.response.MessageResponse
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.core.io.ByteArrayResource
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.util.*
 
-@SpringBootTest
-@AutoConfigureMockMvc
-internal class UserControllerTest @Autowired constructor(
-    val mockMvc: MockMvc,
-    val objectMapper: ObjectMapper
-) {
+
+@SpringBootTest(
+    classes = [AutoredApplication::class],
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
+internal class UserControllerTest {
+
+    @Autowired
+    private lateinit var restTemplate: TestRestTemplate
 
     private val baseUrl = "/api/auth"
 
-    @Nested
-    @DisplayName("POST /api/auth/register")
-    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    inner class RegisterUser {
+    private val headers = HttpHeaders().apply { setBearerAuth("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwb25rcmF0b3Yud29ya0BnbWFpbC5jb20iLCJpYXQiOjE2NzY2NTM2MjEsImV4cCI6MTY3NjY2MTIyMX0.fIGUUQ7suAQAMMXZAIlGN3ze3W3R6HqNUzJWouRhK9JJL8CNTMSjtEW687sYCLmjDfeEjLuDm3diiMcuwmiviw") }
 
-        @Test
-        fun `should register user`() {
-            val newUser = RegisterRequest(
-                fio = "Тест Тест Тест",
-                email = "test@gmail.com",
-                rawPassword = "123456",
-                phone = "+375291111111",
-                birthdate = Date(2001, 1, 10),
-                passportNumber = "BM1234567",
-                driverLicenseNumber = "AA1234567"
-            )
-
-            val testFile = MockMultipartFile(
-                "file",
-                "img.jpg",
-                MediaType.IMAGE_JPEG_VALUE,
-                byteArrayOf(10, 15, 15, 10)
-            )
-
-            /*val performPost = mockMvc.post("$baseUrl/register") {
-                contentType = MediaType.APPLICATION_JSON
-                content = objectMapper.writeValueAsString(newUser)
-
-            }*/
-
-            val performPost1 = mockMvc.perform(
-                post("$baseUrl/register")
-                    .param("registerRequest", objectMapper.writeValueAsString(newUser))
-            )
-                .andExpect(MockMvcResultMatchers.status().isOk)
-
-            /*performPost
-                .andDo { print() }
-                .andExpect {
-                    status { isCreated() }
-                    content {
-                        contentType(MediaType.APPLICATION_JSON)
-                        json(objectMapper.writeValueAsString(newUser))
-                    }
-                }*/
+    @Test
+    fun registerUser_returnsOkResponse() {
+        val userToRegister = RegisterRequest(
+            fio = "Тест Тест Тест",
+            email = "test3@gmail.com",
+            rawPassword = "123456",
+            phone = "+375298893413",
+            birthdate = Date(95, 10, 5),
+            passportNumber = "BM2493687",
+            driverLicenseNumber = "2AB72138117",
+            profileDescription = "Best dealer"
+        )
+        val bytes = ByteArray(10240)
+        val testFile = object : ByteArrayResource(bytes) {
+            override fun getFilename(): String = "test.jpg"
         }
-    }
 
-    /*@Test
-    fun verifyUser() {
+        val body: MultiValueMap<String, Any> = LinkedMultiValueMap()
+        body.add("registerRequest", userToRegister)
+        body.add("avatar", testFile)
+        body.add("passportPhoto", testFile)
+        body.add("driverLicensePhoto", testFile)
 
+        val entity: HttpEntity<MultiValueMap<String, Any>> = HttpEntity(body, headers)
+        val result = restTemplate
+            .postForEntity("$baseUrl/register", entity, MessageResponse::class.java)
+
+        assertNotNull(result)
+        assertEquals(HttpStatus.OK, result?.statusCode)
+        assertEquals(result?.body?.message, "User was registered successfully")
     }
 
     @Test
-    fun getUserResponse() {
-    }*/
+    fun verifyUser_returnsOkResponse() {
+        val entity: HttpEntity<MultiValueMap<String, Any>> = HttpEntity(headers)
+        val result =
+            restTemplate.exchange("$baseUrl/verify/19", HttpMethod.POST, entity, MessageResponse::class.java)
+
+        assertNotNull(result)
+        assertEquals(result?.body?.message, "User verified successfully")
+        assertEquals(HttpStatus.OK, result?.statusCode)
+    }
 }

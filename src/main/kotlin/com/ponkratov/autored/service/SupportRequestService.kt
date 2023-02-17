@@ -31,7 +31,7 @@ class SupportRequestService {
             attachmentService.uploadFile(it, requestResult.id, AttachmentTypeEnum.TYPE_SUPPORT_REQUEST)
         }
 
-        return "Request was created successully"
+        return "Request was created successfully"
     }
 
     fun getAllRequests(): List<SupportRequest> {

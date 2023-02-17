@@ -19,7 +19,7 @@ class StatisticController {
     private val statisticService get() = requireNotNull(_statisticService)
 
     @GetMapping("/get")
-    fun getAdvertisements(): ResponseEntity<StatisticResponse> {
+    fun getStatistics(): ResponseEntity<StatisticResponse> {
         val result = statisticService.getStatisticResponse()
         return ResponseEntity.ok(result)
     }
