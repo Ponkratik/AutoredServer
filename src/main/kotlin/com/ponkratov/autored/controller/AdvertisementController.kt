@@ -34,7 +34,7 @@ class AdvertisementController {
     @PostMapping("/verify/{id}")
     fun verifyAdvertisement(@PathVariable("id") id: Long): ResponseEntity<*> {
         val result = advertisementService.verifyAdvertisement(id)
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @GetMapping("/get/{id}")

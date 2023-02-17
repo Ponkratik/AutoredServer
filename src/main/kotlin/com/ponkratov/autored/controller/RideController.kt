@@ -52,45 +52,45 @@ class RideController {
             rideId,
             Date()
         )
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @PostMapping("/checkup/before")
     fun checkupCarBeforeRide(
-        @RequestPart("advertisementId") advertisementId: Long,
+        @RequestPart("rideId") rideId: Long,
         @RequestPart("files") files: List<MultipartFile>
     ): ResponseEntity<*> {
         val result = rideService.checkupCar(
-            advertisementId, files, AttachmentTypeEnum.TYPE_CAR_CHECK_PHOTO_BEFORE
+            rideId, files, AttachmentTypeEnum.TYPE_CAR_CHECK_PHOTO_BEFORE
         )
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @PostMapping("/checkup/after")
     fun checkupCarAfterRide(
-        @RequestPart("advertisementId") advertisementId: Long,
+        @RequestPart("ridetId") rideId: Long,
         @RequestPart("files") files: List<MultipartFile>
     ): ResponseEntity<*> {
         val result = rideService.checkupCar(
-            advertisementId, files, AttachmentTypeEnum.TYPE_CAR_CHECK_PHOTO_AFTER
+            rideId, files, AttachmentTypeEnum.TYPE_CAR_CHECK_PHOTO_AFTER
         )
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @PostMapping("/sign/lessor/{id}")
     fun signActByLessor(@PathVariable("id") rideId: Long): ResponseEntity<*> {
         val result = rideService.signByLessor(rideId, Date())
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @PostMapping("/sign/lessee/{id}")
     fun signActByLessee(@PathVariable("id") rideId: Long): ResponseEntity<*> {
         val result = rideService.signByLessee(rideId, Date())
 
-        return ResponseEntity.ok(result)
+        return ResponseEntity.ok(MessageResponse(result))
     }
 
     @GetMapping("/get/all/user/{id}")

@@ -1,7 +1,6 @@
 package com.ponkratov.autored.controller
 
 import com.ponkratov.autored.dto.response.MessageResponse
-import com.ponkratov.autored.dto.response.ReviewCarResponse
 import com.ponkratov.autored.model.ReviewCar
 import com.ponkratov.autored.service.ReviewCarService
 import org.springframework.beans.factory.annotation.Autowired
